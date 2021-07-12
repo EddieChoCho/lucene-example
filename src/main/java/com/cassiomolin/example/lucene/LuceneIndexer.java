@@ -58,6 +58,25 @@ public class LuceneIndexer {
         indexWriter.close();
     }
 
+    public void index(Directory index, int fileId) throws IOException {
+
+        StandardAnalyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter indexWriter = new IndexWriter(index, config);
+
+        String fileName = "/data/shopping-list-" + fileId + ".json";
+        InputStream stream = this.getClass().getResourceAsStream(fileName);
+        ShoppingList shoppingList = mapper.readValue(stream, ShoppingList.class);
+
+        shoppingList.setFileName(fileName);
+        Document document = toDocument(shoppingList);
+
+        indexWriter.addDocument(document);
+        indexWriter.commit();
+
+        indexWriter.close();
+    }
+
     public void index(Directory index, TaxonomyWriter taxonomyWriter, FacetsConfig facetsConfig) throws IOException {
 
         StandardAnalyzer analyzer = new StandardAnalyzer();

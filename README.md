@@ -106,4 +106,7 @@ for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
 # Example of Faceted Search
 
 * [Apache Lucene Faceted Search User's Guide](https://lucene.apache.org/core/4_0_0/facet/org/apache/lucene/facet/doc-files/userguide.html)
-    
+
+# Other examples
+
+* [RIPE-NCC/whois](https://github.com/RIPE-NCC/whois/blob/9e40c79dfb3b00f63471126e17d9a70c76ea3046/whois-api/src/main/java/net/ripe/db/whois/api/fulltextsearch/IndexTemplate.java)
