@@ -4,6 +4,9 @@ import com.cassiomolin.example.model.ShoppingList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
+import org.apache.lucene.facet.FacetField;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -55,6 +58,29 @@ public class LuceneIndexer {
         indexWriter.close();
     }
 
+    public void index(Directory index, TaxonomyWriter taxonomyWriter, FacetsConfig facetsConfig) throws IOException {
+
+        StandardAnalyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter indexWriter = new IndexWriter(index, config);
+
+        for (int i = 0; i < 5; i++) {
+
+            String fileName = "/data/shopping-list-" + (i + 1) + ".json";
+            InputStream stream = this.getClass().getResourceAsStream(fileName);
+            ShoppingList shoppingList = mapper.readValue(stream, ShoppingList.class);
+
+            shoppingList.setFileName(fileName);
+            Document document = toDocumentWithFacetField(shoppingList);
+
+            indexWriter.addDocument(facetsConfig.build(taxonomyWriter, document));
+            indexWriter.commit();
+        }
+
+        indexWriter.close();
+        taxonomyWriter.close();
+    }
+
 
     /**
      * Create a Lucene {@link Document} instance from a {@link ShoppingList} instance.
@@ -76,6 +102,12 @@ public class LuceneIndexer {
 
         document.add(new StringField(DocumentFields.FILE_NAME_FIELD, shoppingList.getFileName(), Field.Store.YES));
 
+        return document;
+    }
+
+    private Document toDocumentWithFacetField(ShoppingList shoppingList) {
+        Document document = this.toDocument(shoppingList);
+        document.add(new FacetField(DocumentFields.NAME_FACET_FIELD, shoppingList.getName()));
         return document;
     }
 }

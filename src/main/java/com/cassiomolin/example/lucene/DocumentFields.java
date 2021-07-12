@@ -12,6 +12,7 @@ public final class DocumentFields {
     }
 
     public static final String NAME_FIELD = "name";
+    public static final String NAME_FACET_FIELD = "name_facets";
     public static final String DATE_FIELD = "date";
     public static final String ITEM_FIELD = "item";
     public static final String FILE_NAME_FIELD = "fileName";

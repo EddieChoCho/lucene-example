@@ -102,3 +102,8 @@ for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
   [IndexSearcher]: https://lucene.apache.org/core/6_5_1/core/org/apache/lucene/search/IndexSearcher.html
   [Query]: https://lucene.apache.org/core/6_5_1/core/org/apache/lucene/search/Query.html
   [TopDocs]: https://lucene.apache.org/core/6_5_1/core/org/apache/lucene/search/TopDocs.html
+
+# Example of Faceted Search
+
+* [Apache Lucene Faceted Search User's Guide](https://lucene.apache.org/core/4_0_0/facet/org/apache/lucene/facet/doc-files/userguide.html)
+    
