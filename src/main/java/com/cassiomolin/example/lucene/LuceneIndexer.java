@@ -100,6 +100,26 @@ public class LuceneIndexer {
         taxonomyWriter.close();
     }
 
+    public void index(Directory index, TaxonomyWriter taxonomyWriter, FacetsConfig facetsConfig, int fileId) throws IOException {
+
+        StandardAnalyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter indexWriter = new IndexWriter(index, config);
+
+        String fileName = "/data/shopping-list-" + fileId + ".json";
+        InputStream stream = this.getClass().getResourceAsStream(fileName);
+        ShoppingList shoppingList = mapper.readValue(stream, ShoppingList.class);
+
+        shoppingList.setFileName(fileName);
+        Document document = toDocumentWithFacetField(shoppingList);
+
+        indexWriter.addDocument(facetsConfig.build(taxonomyWriter, document));
+        indexWriter.commit();
+
+        indexWriter.close();
+        taxonomyWriter.close();
+    }
+
 
     /**
      * Create a Lucene {@link Document} instance from a {@link ShoppingList} instance.
